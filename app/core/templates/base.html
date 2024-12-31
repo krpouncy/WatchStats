@@ -1,0 +1,85 @@
+<!-- core-repo/app/core/templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#212121" />
+  <title>Overwatch 2 - Free Core</title>
+  <!-- Bootstrap and Chart.js -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
+</head>
+
+<body class="bg-dark text-light">
+  <div class="container py-5">
+
+    <!--
+      Common header or navbar can go here if desired.
+      e.g.: <nav>Core Nav</nav>
+    -->
+
+    <!--
+      The "content" block is where child templates
+      will inject their unique HTML.
+    -->
+    {% block content %}
+    {% endblock content %}
+
+  </div>
+
+  <!-- Loading Overlay (common to core) -->
+  <div id="loading-overlay" style="display:none;">
+    <div class="overlay-backdrop"></div>
+    <div class="overlay-content">
+      <div class="spinner-border text-light" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="text-light mt-2">Processing...</p>
+    </div>
+  </div>
+
+  <style>
+    /* Example overlay style */
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+    }
+    .overlay-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+    .overlay-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+  </style>
+
+  <!--
+    Reference your new core script after the body content,
+    so everything is loaded when the JavaScript runs.
+    (Change the path as needed to match your blueprint static folder)
+  -->
+  <!-- By default load core.js at end -->
+  <script src="{{ url_for('core.static', filename='js/core.js') }}"></script>
+
+  <!-- Additional scripts can be overridden or added by child templates -->
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
