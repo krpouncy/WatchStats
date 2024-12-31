@@ -1,6 +1,8 @@
+import os
+
 import cv2
 import numpy as np
-import os
+
 
 def split_image(image):
     """Split the image into two halves (top and bottom)"""
@@ -91,9 +93,3 @@ def generate_sub_images(image_path):
     # Generate sub-images
     sub_images = prepare_sub_images(processed_image)
     return sub_images
-
-# def show_image(image_array):
-#     """Display an image using matplotlib."""
-#     plt.imshow(image_array, cmap='gray')
-#     plt.axis('off')
-#     plt.show()

@@ -3,13 +3,12 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 
 import cv2
+import pytesseract
 import torch
 import torch.nn as nn
 from PIL import Image
 from torchvision import models
 from torchvision import transforms
-
-import pytesseract
 from tqdm import tqdm
 
 from app.core.db_manager import (
@@ -17,7 +16,6 @@ from app.core.db_manager import (
     save_snapshot_data,
     save_team_data
 )
-
 from app.core.image_utils import generate_sub_images
 
 SECTION_BOUNDS = [
@@ -90,8 +88,6 @@ class ImageParser:
         self.preprocess = transforms.Compose([
             transforms.Resize((224, 224)),  # Resize to match model input
             transforms.ToTensor()  # Convert PIL Image to tensor
-            # transforms.Normalize(mean=[0.485, 0.456, 0.406],  # ImageNet mean
-            #                      std=[0.229, 0.224, 0.225])   # ImageNet std
         ])
 
     def classify_images(self, images, skip_enemy=False):
@@ -123,15 +119,12 @@ class ImageParser:
             predicted_class_idxs = torch.argmax(probabilities, dim=1).cpu().numpy()
             confidences = torch.max(probabilities, dim=1).values.cpu().numpy()
 
-        # Convert class indices to class names
-        # predicted_classes = [self.class_names[idx] for idx in predicted_class_idxs]
-
         predicted_classes = [
             self.class_names[idx] if confidence >= 0.9 else 'label_Hidden'
             for idx, confidence in zip(predicted_class_idxs, confidences)
         ]
 
-        # # Debugging: Print the probabilities and predicted class names
+        # TODO Debugging: Print the probabilities and predicted class names
         # for idx, (prob, predicted_class, confidence) in enumerate(
         #         zip(probabilities.cpu().numpy(), predicted_classes, confidences)):
         #     print(f"Image {idx + 1}:")
@@ -284,11 +277,8 @@ class ImageParser:
         :param directories: Root directory containing game subdirectories.
         :param current_directory: Name of the current subdirectory to process.
         """
-        path_to_dir = os.path.join(directories, current_directory)
-        image_files = [
-            file for file in os.listdir(path_to_dir)
-            if os.path.isfile(os.path.join(path_to_dir, file))
-        ]
+        path_to_dir = str(os.path.join(directories, current_directory))
+        image_files = [file for file in os.listdir(path_to_dir) if os.path.isfile(os.path.join(path_to_dir, file))]
 
         if not image_files:
             tqdm.write(f"No image files found in directory: {current_directory}")

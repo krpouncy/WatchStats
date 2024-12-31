@@ -1,16 +1,11 @@
-import os
-import eventlet
-# Set the environment variable before any other imports
-os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE" # TODO workaround to issue about libiomp5md.dll
-# TODO CRITICAL ISSUE DETAILED INCLUDED
-# OMP: Error #15: Initializing libiomp5md.dll, but found libiomp5md.dll already initialized.
-# OMP: Hint This means that multiple copies of the OpenMP runtime have been linked into the program. That is dangerous, since it can degrade performance or cause incorrect results. The best thing to do is to ensure that only a single OpenMP runtime is linked into the process, e.g. by avoiding static linking of the OpenMP runtime in any library. As an unsafe, unsupported, undocumented workaround you can set the environment variable KMP_DUPLICATE_LIB_OK=TRUE to allow the program to continue to execute, but that may cause crashes or silently produce incorrect results. For more information, please see http://www.intel.com/software/products/support/.
-
-import ctypes # TODO consider using another library like (inputs or pynput) instead of keyboard (DOESN"T WORK)
-from app.core.state import app_state
-from app.core.classification import process_screenshot
-
+import ctypes  # TODO consider using another library like (inputs or pynput) instead of keyboard (DOESN"T WORK)
 import traceback
+
+import eventlet
+
+from app.core.classification import process_screenshot
+from app.core.state import app_state
+
 
 # XInput structures and constants
 class XinputGamepad(ctypes.Structure):
@@ -34,6 +29,7 @@ XINPUT_GAMEPAD_BACK = 0x0020
 VK_TAB = 0x09
 
 def get_controller_state(controller_id=0):
+    """Get the state of a controller"""
     state = XinputState()
     try:
         result = ctypes.windll.xinput1_4.XInputGetState(controller_id, ctypes.byref(state))
@@ -49,6 +45,7 @@ def is_key_pressed(vk_code):
     return ctypes.windll.user32.GetAsyncKeyState(vk_code) & 0x8000
 
 def input_listener():
+    """Listen for input events."""
     print("Input listener started")
 
     holding_back = False

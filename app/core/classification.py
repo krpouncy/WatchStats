@@ -1,22 +1,33 @@
 # app/core/classification.py
-import numpy as np
-from .image_parser import ImageParser
-import cv2
-import pytesseract
 import re
-from .image_utils import generate_sub_images
-from .game_manager import game_manager
+
+import cv2
+import numpy as np
+import pytesseract
+
 from app import socketio
+from app.core.game_manager import game_manager
+from app.core.image_parser import ImageParser
+from app.core.image_utils import generate_sub_images
 from app.core.state import app_state
 
-print("\ndoing a thing")
-classifier = ImageParser(model_path=app_state.model_path)
-print("that easy bud.\n")
 
 # create a classifier object to compute logistic regression
 class LogisticRegression:
     def __init__(self):
-        self.init_version_1() # latest model coeffs
+        # initialize the coefficients for the model as None
+        self.threshold = None
+        self.sensitivity = None
+        self.specificity = None
+        self.intercept = None
+        self.time_coeff = None
+        self.player_coefficients = None
+        self.support_status_coef = None
+        self.tank_status_coef = None
+        self.dps_status_coef = None
+
+        # initialize the model with chosen coefficients
+        self.init_version_1()
 
     def init_version_1(self):
         # initialize the coefficients for the model
@@ -26,7 +37,6 @@ class LogisticRegression:
         self.intercept = -0.2182999
         self.time_coeff = 0.03752734
 
-        # TODO complete
         self.player_coefficients = np.array([
             # Player 0
             [-0.06960857, 0.08510925, 0.9270883, -0.0002490955, 0.0001611925, -0.0001437304],
@@ -65,7 +75,7 @@ class LogisticRegression:
 
         time_in_minutes, team_composition, team_status = game_details
 
-        # return nothing if the there are 5 or more players misisng
+        # return nothing if the there are 5 or more players missing
         if not stats or len(stats) < 5 or time_in_minutes is None:
             print(len(stats), stats)
             return None
@@ -130,7 +140,11 @@ def convert_stats_to_int(stats):
     return stats
 
 def calculate_team_statuses(stats):
-    stats = convert_stats_to_int(stats) #TODO consider relocating to function that calls this
+    """Calculate the status of the tank, dps, and support roles based on the given stats.
+
+    :param stats: A list of 5 lists (representing players on Team) with each containing 6 numeric values for K, A, D, Dmg, H, and MIT.
+    :return: A tuple of strings representing the status of the tank, dps, and support roles.
+    """
 
     # initialize the status of each role
     tank_status, dps_status, support_status = 'not enough data', 'not enough data', 'not enough data'
@@ -178,6 +192,11 @@ def calculate_team_statuses(stats):
     return tank_status, dps_status, support_status
 
 def get_stats_and_details(filename):
+    """
+    Extract the stats and details from the given image.
+    :param filename: The filename of the image.
+    :return: A tuple of stats and game details. None if the image could not be read or the dimensions are too small.
+    """
     image = cv2.imread(filename)
     if image is None:
         print(f"Error reading image: {filename}")
@@ -211,19 +230,20 @@ def get_stats_and_details(filename):
 
     sub_images = generate_sub_images(filename)
 
+    # crop and parse character images
     character_images = [si[:, :91] for si in sub_images]
-    stat_images = [si[:, 91:] for si in sub_images]
-
     team_composition, _ = classifier.classify_images(character_images, skip_enemy=True) # TODO process images in batch
+
+    # crop and parse stat images
+    stat_images = [si[:, 91:] for si in sub_images]
     stats = classifier.extract_text_from_stats(stat_images)
+    stats = convert_stats_to_int(stats) # convert stats to integers
     team_status = calculate_team_statuses(stats)
-    game_details = time_in_minutes, team_composition, team_status
 
-    return stats, game_details
-
-prediction_model = LogisticRegression() # TODO move above for better organization
+    return stats, (time_in_minutes, team_composition, team_status)
 
 def process_screenshot():
+    """Process the current screenshot and update the win probability."""
     filename = game_manager.take_screenshot()
 
     socketio.emit('screenshot_taken', {'filename': filename})
@@ -242,15 +262,13 @@ def process_screenshot():
 
             _, team_composition, team_status = game_details
             update_player_status(team_status, team_composition)
-
-            # save the current team composition
-            # socketio.emit('update_team_composition', {'my_team': my_team_players}) # TODO remove?
         else:
             game_manager.current_screenshots.pop()
     else:
         game_manager.current_screenshots.pop()
 
 def update_player_status(team_status, team_composition):
+    """Update the player status based on the given team status and composition."""
     # remove the label_ prefix from each person in the team
     team_players = ['_'.join(player.split('_')[1:]) for player in team_composition]
     print(team_players)
@@ -263,3 +281,12 @@ def update_player_status(team_status, team_composition):
         'support': {'status': support_status, 'text': 'Support: ' + support_status},
         'team_composition': team_players
     })
+
+# initialize the classifier and prediction model
+prediction_model = LogisticRegression()
+
+if app_state.model_path is None:
+    print("Model path not set.")
+else:
+    print(f"Model path: {app_state.model_path}")
+    classifier = ImageParser(model_path=app_state.model_path)

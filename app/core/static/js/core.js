@@ -212,9 +212,6 @@ function setInput(inputType) {
       console.log(`Input type set to: ${data.input_type}`);
       const inputSection = document.getElementById('input-section');
       if (inputSection) inputSection.style.display = 'none';
-      //
-      // // Reload the page to hide the input section
-      // location.reload();
     });
 }
 
@@ -262,7 +259,7 @@ function setGameOutcome(outcome) {
       return fetch('/reset-chart', { method: 'POST' });
     })
     .then((resp) => resp.json())
-    .then((d) => {
+    .then(() => {
       console.log('Chart has been reset.');
       const outcomeDiv = document.getElementById('game-outcome-options');
       if (outcomeDiv) outcomeDiv.style.display = 'none';

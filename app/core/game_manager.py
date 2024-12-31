@@ -1,11 +1,14 @@
 # app/core/game_manager.py
 
-import os
 import datetime
+import os
 import shutil
-import time
+
+import eventlet
 from PIL import ImageGrab
-from .state import app_state
+
+from app.core.state import app_state
+
 
 class GameManager:
     def __init__(self, screenshot_folder='screenshots'):
@@ -17,6 +20,7 @@ class GameManager:
         print("Current working directory: ", os.getcwd())
 
     def create_game_folder(self, game_result):
+        """Create a folder for the current game."""
         if self.earliest_timestamp is None:
             self.earliest_timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         folder_name = os.path.join(self.screenshot_folder, f"game_{game_result}_{self.earliest_timestamp}")
@@ -24,7 +28,8 @@ class GameManager:
         return folder_name
 
     def take_screenshot(self):
-        time.sleep(0.25) #TODO decide if I should be using eventlet sleep instead
+        """Take a screenshot and save it to the screenshot folder."""
+        eventlet.sleep(0.25)
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         if self.earliest_timestamp is None:
             self.earliest_timestamp = timestamp
@@ -36,6 +41,7 @@ class GameManager:
         return filename
 
     def move_screenshots_to_folder(self, game_result):
+        """Move the current screenshots to a folder for the current game."""
         folder = self.create_game_folder(game_result)
         if not self.current_screenshots:
             print("No screenshots to move.")
@@ -55,5 +61,6 @@ class GameManager:
         return folder
 
 game_manager = GameManager()
-game_manager.screenshot_folder = app_state.screenshot_folder
+if app_state.screenshot_folder:
+    game_manager.screenshot_folder = app_state.screenshot_folder
 

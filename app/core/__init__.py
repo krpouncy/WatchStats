@@ -1,6 +1,8 @@
-from flask import Blueprint
 import os
-from .state import app_state
+
+from flask import Blueprint
+
+from app.core.state import app_state
 
 # Define the blueprint
 core_bp = Blueprint(
@@ -12,16 +14,16 @@ core_bp = Blueprint(
 )
 
 # Import routes (this ensures routes are registered with the blueprint)
-from . import routes
+from app.core import routes
 
 # Create necessary directories if they don't exist
-def create_required_folders(folders = []):
+def create_required_folders(folders=None):
     """Create necessary directories if they don't exist."""
-    if folders == []:
+    if folders is None:
         return {}
 
     base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..\\..\\'))
-    folder_paths = {}
+    paths = {}
 
     for folder in folders:
         folder_path = os.path.join(base_path, folder)
@@ -30,8 +32,8 @@ def create_required_folders(folders = []):
             print(f"Created folder: {folder_path}")
         else:
             print(f"Folder already exists: {folder_path}")
-        folder_paths[folder] = folder_path
-    return folder_paths
+        paths[folder] = folder_path
+    return paths
 
 folder_paths = create_required_folders(folders=['screenshots', 'models'])
 SCREENSHOT_PATH, MODEL_PATH = folder_paths['screenshots'], folder_paths['models']
@@ -39,9 +41,4 @@ SCREENSHOT_PATH, MODEL_PATH = folder_paths['screenshots'], folder_paths['models'
 app_state.screenshot_folder = SCREENSHOT_PATH
 print(f"Screenshot path: {SCREENSHOT_PATH}")
 
-app_state.model_path = MODEL_PATH + "\latest_model.pth" # TODO handle hard coded model name
-print(f"Model path: {app_state.model_path}")
-
-# # start the input listener
-# from .input_listener import start_input_listener
-# start_input_listener()
+app_state.model_path = os.path.join(MODEL_PATH, "latest_model.pth")
