@@ -31,59 +31,117 @@ function initChart() {
     return;
   }
   winChart = new Chart(ctx.getContext('2d'), {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [
-        {
-          label: 'Win Probability',
-          data: [],
-          backgroundColor: 'rgba(255, 140, 0, 0.4)',
-          borderColor: 'rgba(255, 215, 0, 1)',
-          borderWidth: 4,
+  type: 'line',
+  data: {
+    labels: [], // Dynamic labels
+    datasets: [
+      {
+        label: 'Win Probability',
+        data: [],
+        backgroundColor: 'rgba(52, 152, 219, 0.2)', // Light blue gradient
+        borderColor: 'rgba(41, 128, 185, 1)', // Deep blue
+        borderWidth: 3,
+        pointBackgroundColor: 'rgba(255, 140, 0, 0.9)', // Orange points
+        pointBorderColor: 'rgba(255, 215, 0, 1)', // Gold border for points
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        tension: 0.4, // Smooth line
+      },
+    ],
+  },
+  options: {
+    plugins: {
+      legend: {
+        labels: {
+          color: 'rgba(255, 255, 255, 0.9)', // Off-white text
+          font: {
+            size: 14,
+            weight: '500',
+          },
         },
-      ],
-    },
-    options: {
-      plugins: {
-        legend: {
-          labels: { color: 'white' },
-        },
-        annotation: {
-          annotations: {
-            thresholdLine: {
-              type: 'line',
-              mode: 'horizontal',
-              scaleID: 'y',
-              value: 55, // If you have a threshold
-              borderColor: 'red',
-              borderWidth: 2,
-              borderDash: [5, 5],
-              label: {
-                enabled: true,
-                content: 'Threshold',
-                position: 'start',
-                backgroundColor: 'rgba(0,0,0,0.7)',
-                color: 'white',
+      },
+      annotation: {
+        annotations: {
+          thresholdLine: {
+            type: 'line',
+            mode: 'horizontal',
+            scaleID: 'y',
+            value: 55, // Dynamic threshold value
+            borderColor: 'rgba(231, 76, 60, 1)', // Bright red
+            borderWidth: 2,
+            borderDash: [6, 6], // Dashed line
+            label: {
+              enabled: true,
+              content: 'Threshold',
+              position: 'start',
+              backgroundColor: 'rgba(44, 62, 80, 0.8)', // Dark glossy background
+              color: 'white',
+              font: {
+                size: 12,
+                weight: 'bold',
               },
+              padding: 6,
             },
           },
         },
       },
-      scales: {
-        x: {
-          ticks: { color: 'white' },
-          title: { display: true, text: 'Events', color: 'white' },
-        },
-        y: {
-          ticks: { color: 'white' },
-          title: { display: true, text: 'Win Probability (%)', color: 'white' },
-          min: 0,
-          max: 100,
-        },
+      tooltip: {
+        backgroundColor: 'rgba(44, 62, 80, 0.9)', // Dark glossy tooltip
+        titleColor: 'white',
+        bodyColor: 'rgba(200, 200, 200, 0.9)', // Light gray
+        borderColor: 'rgba(41, 128, 185, 1)', // Deep blue
+        borderWidth: 1,
+        padding: 12,
       },
     },
-  });
+    scales: {
+      x: {
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.8)', // Soft white
+          font: {
+            size: 12,
+          },
+        },
+        title: {
+          display: true,
+          text: 'Events',
+          color: 'rgba(255, 255, 255, 0.8)',
+          font: {
+            size: 14,
+            weight: '600',
+          },
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)', // Subtle grid lines
+        },
+      },
+      y: {
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.8)',
+          font: {
+            size: 12,
+          },
+        },
+        title: {
+          display: true,
+          text: 'Win Probability (%)',
+          color: 'rgba(255, 255, 255, 0.8)',
+          font: {
+            size: 14,
+            weight: '600',
+          },
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        min: 0,
+        max: 100,
+      },
+    },
+    responsive: true
+  },
+});
+
 }
 
 /* ==========================
@@ -189,11 +247,13 @@ function loadScreenshots() {
    Overlay Show/Hide
 ========================== */
 socket.on('show_loading_overlay', () => {
+  console.log('Received show_loading_overlay event');
   const overlay = document.getElementById('loading-overlay');
   if (overlay) overlay.style.display = 'block';
 });
 
 socket.on('hide_loading_overlay', () => {
+    console.log('Received hide_loading_overlay event');
   const overlay = document.getElementById('loading-overlay');
   if (overlay) overlay.style.display = 'none';
 });
@@ -233,6 +293,8 @@ function checkInputType() {
 document.getElementById('reset-input-btn')?.addEventListener('click', () => {
     const inputSection = document.getElementById('input-section');
     if (inputSection) inputSection.style.display = 'block';
+    // move to the div location
+    window.scrollTo(0, 0);
 });
 
 /* ==========================

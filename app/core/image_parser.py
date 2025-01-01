@@ -11,12 +11,12 @@ from torchvision import models
 from torchvision import transforms
 from tqdm import tqdm
 
-from app.core.db_manager import (
+from .db_manager import (
     save_game_data,
     save_snapshot_data,
     save_team_data
 )
-from app.core.image_utils import generate_sub_images
+from .image_utils import generate_sub_images
 
 SECTION_BOUNDS = [
     (275, 339),

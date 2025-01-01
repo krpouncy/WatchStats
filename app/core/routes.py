@@ -5,9 +5,9 @@ import os
 from flask import render_template, request, jsonify, send_from_directory
 
 from app import socketio
-from app.core import core_bp
-from app.core.game_manager import game_manager
-from app.core.state import app_state
+from . import core_bp
+from .game_manager import game_manager
+from .state import app_state
 
 
 @core_bp.route('/')

@@ -3,8 +3,8 @@ import traceback
 
 import eventlet
 
-from app.core.classification import process_screenshot
-from app.core.state import app_state
+from .classification import process_screenshot
+from .state import app_state
 
 
 # XInput structures and constants

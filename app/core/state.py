@@ -3,6 +3,7 @@ class AppState:
     game_progress = []
     screenshot_folder = None
     model_path = None # TODO consider moving to private location
+    rules_df = None
 
 # Singleton instance
 app_state = AppState()

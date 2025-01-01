@@ -1,8 +1,10 @@
 import os
+import sys
+from pathlib import Path
 
 from flask import Blueprint
 
-from app.core.state import app_state
+from .state import app_state
 
 # Define the blueprint
 core_bp = Blueprint(
@@ -14,31 +16,27 @@ core_bp = Blueprint(
 )
 
 # Import routes (this ensures routes are registered with the blueprint)
-from app.core import routes
+from . import routes
 
-# Create necessary directories if they don't exist
-def create_required_folders(folders=None):
-    """Create necessary directories if they don't exist."""
-    if folders is None:
-        return {}
+# get the root path of the project and create the necessary directories
+def get_project_root():
+    # Try to locate the directory of the main script
+    try:
+        main_script = sys.modules['__main__'].__file__
+        return os.path.abspath(os.path.dirname(main_script))
+    except AttributeError:
+        # Fallback to current working directory if __file__ is not available
+        return os.getcwd()
 
-    base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..\\..\\'))
-    paths = {}
+base_path = get_project_root()
+paths = {
+    "screenshots": os.path.join(base_path, "screenshots"),
+    "models": os.path.join(base_path, "models"),
+}
 
-    for folder in folders:
-        folder_path = os.path.join(base_path, folder)
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
-            print(f"Created folder: {folder_path}")
-        else:
-            print(f"Folder already exists: {folder_path}")
-        paths[folder] = folder_path
-    return paths
+# Ensure directories exist
+for path in paths.values():
+    os.makedirs(path, exist_ok=True)
 
-folder_paths = create_required_folders(folders=['screenshots', 'models'])
-SCREENSHOT_PATH, MODEL_PATH = folder_paths['screenshots'], folder_paths['models']
-
-app_state.screenshot_folder = SCREENSHOT_PATH
-print(f"Screenshot path: {SCREENSHOT_PATH}")
-
-app_state.model_path = os.path.join(MODEL_PATH, "latest_model.pth")
+app_state.screenshot_folder = paths["screenshots"]
+app_state.model_path = os.path.join(paths['models'], "latest_model.pth")

@@ -6,10 +6,10 @@ import numpy as np
 import pytesseract
 
 from app import socketio
-from app.core.game_manager import game_manager
-from app.core.image_parser import ImageParser
-from app.core.image_utils import generate_sub_images
-from app.core.state import app_state
+from.game_manager import game_manager
+from .image_parser import ImageParser
+from .image_utils import generate_sub_images
+from .state import app_state
 
 
 # create a classifier object to compute logistic regression

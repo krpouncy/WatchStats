@@ -7,7 +7,7 @@ import shutil
 import eventlet
 from PIL import ImageGrab
 
-from app.core.state import app_state
+from .state import app_state
 
 
 class GameManager:
