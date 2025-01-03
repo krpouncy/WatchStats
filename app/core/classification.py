@@ -27,9 +27,10 @@ class LogisticRegression:
         self.dps_status_coef = None
 
         # initialize the model with chosen coefficients
-        self.init_version_1()
+        self.init_version_3()
 
     def init_version_1(self):
+        ### THIS VERSION HAS THE BEST RECALL BUT IS PRONE TO MORE FALSE POSITIVES ###
         # initialize the coefficients for the model
         self.threshold = 0.5187982
         self.sensitivity = 0.6979
@@ -68,6 +69,53 @@ class LogisticRegression:
             'poor': 0,
             'average': 0,
             'good': 0
+        }
+
+    def init_version_2(self):
+        # better F1 but worse recall
+        self.threshold = 0.5
+        self.sensitivity = 0.6533
+        self.specificity = 0.7737
+        self.intercept = -0.7029
+        self.time_coeff = 0.0515
+        self.player_coefficients = np.array([
+            #    K        A         D         Damage      H          MIT
+            [-0.0699, -0.1625, 0.4584, -0.0001, -0.0004, -0.0002],  # Player 0
+            [-0.2127, 0.0000, 0.2682, -0.0002, 0.0014, 0.0012],  # Player 1
+            [-0.1137, -0.1371, 0.3372, 0.0000, 0.0005, 0.0015],  # Player 2
+            [-0.0849, -0.0760, 0.5032, -0.0002, 0.0003, 0.0011],  # Player 3
+            [0.0053, -0.1959, 0.4914, -0.0007, 0.0002, 0.0003]  # Player 4
+        ])
+        self.tank_status_coef = {'poor': 0.05, 'average': 0, 'good': 0.08}
+        self.support_status_coef = {'poor': 0.14, 'average': 0, 'good': 0.32}
+        self.dps_status_coef = {'poor': 0, 'average': 0, 'good': 0}
+
+    def init_version_3(self):
+        self.threshold = 0.636344429951743
+        self.sensitivity =  0.7229
+        self.specificity =  0.6389
+        self.intercept = -0.5090959  # (Intercept)
+        self.time_coeff = 0.02672215        # Time
+
+        # Columns represent: [K, A, D, Damage, H, MIT]
+        self.player_coefficients = np.array([
+            [-0.06986840, -0.04328920,  0.8857315, -0.00000000, 0.00035745, -0.00014212],  # Player 0
+            [-0.1255013,   0.00000000,  0.09330391, -0.00034630, 0.00076444,  0.00137490],  # Player 1
+            [-0.1396724,   0.1438636,   0.2315665, -0.00000000, 0.00082945,  0.00090104],  # Player 2
+            [-0.02923840, -0.09795575,  0.4560887, -0.00039028, 0.00000643,  0.00019197],  # Player 3
+            [-0.04948388, -0.06649373,  0.5991235, -0.00006091, 0.00004961, -0.00033230]   # Player 4
+        ])
+
+        self.support_status_coef = {
+            'poor':    -0.9873712,
+            'average':  0.0,
+            'good':     0.00049034
+        }
+
+        self.tank_status_coef = {
+            'poor':    -0.08643554,
+            'average':  0.0,
+            'good':     -0.4465344
         }
 
     def predict_probability(self, stats, game_details):
