@@ -325,7 +325,7 @@ function setGameOutcome(outcome) {
       console.log('Chart has been reset.');
       const outcomeDiv = document.getElementById('game-outcome-options');
       if (outcomeDiv) outcomeDiv.style.display = 'none';
-      window.location.reload();
+      // window.location.reload();
     })
     .catch((error) => console.error('Error setting game outcome:', error));
 }

@@ -38,5 +38,12 @@ paths = {
 for path in paths.values():
     os.makedirs(path, exist_ok=True)
 
+app_state.base_path = base_path
 app_state.screenshot_folder = paths["screenshots"]
-app_state.model_path = os.path.join(paths['models'], "latest_model.pth")
+app_state.model_directory = paths['models']
+
+# TODO add functionality to select the default model (would prefer to not loading anything by default)
+app_state.current_model = "OW2_new"
+from .game_manager import game_manager
+game_manager.screenshot_folder = app_state.screenshot_folder
+game_manager.load_model(app_state.current_model)

@@ -3,9 +3,8 @@ import traceback
 
 import eventlet
 
-from .classification import process_screenshot
+from .game_manager import game_manager
 from .state import app_state
-
 
 # XInput structures and constants
 class XinputGamepad(ctypes.Structure):
@@ -55,7 +54,7 @@ def input_listener():
             if app_state.input_type == "PC":
                 if is_key_pressed(VK_TAB):
                     print("Taking screenshot...")
-                    process_screenshot()
+                    game_manager.process_screenshot()
                     eventlet.sleep(0.5)  # Prevent spamming
 
             if app_state.input_type == "Controller":
@@ -66,7 +65,7 @@ def input_listener():
                         if not holding_back:
                             holding_back = True
                             print("Taking screenshot...")
-                            process_screenshot()
+                            game_manager.process_screenshot()
                     else:
                         holding_back = False
 

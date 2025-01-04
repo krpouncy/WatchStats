@@ -43,7 +43,7 @@ def get_chart_data():
     return jsonify({
         "labels": [f"Event {i+1}" for i in range(len(app_state.game_progress))],
         "datasets": [{
-            "label": "Win Probability",
+            "label": "Winning Probability",
             "data": [round(prob * 100, 1) for prob in app_state.game_progress],
             "backgroundColor": ["#4caf50" if prob > 0.5 else "#f44336" for prob in app_state.game_progress]
         }]

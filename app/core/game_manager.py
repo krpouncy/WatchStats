@@ -1,12 +1,15 @@
 # app/core/game_manager.py
 
 import datetime
+import importlib
 import os
 import shutil
 
 import eventlet
 from PIL import ImageGrab
 
+from app import socketio
+from models import PredictorInterface, EventsHandlerInterface
 from .state import app_state
 
 
@@ -16,7 +19,7 @@ class GameManager:
         self.current_screenshots = []
         self.screenshot_folder = screenshot_folder
 
-        #print current working directory
+        # print current working directory
         print("Current working directory: ", os.getcwd())
 
     def create_game_folder(self, game_result):
@@ -40,6 +43,32 @@ class GameManager:
         self.current_screenshots.append(filename)
         return filename
 
+    def process_screenshot(self):
+        """Process the current screenshot and update the win probability."""
+        filename = self.take_screenshot()
+
+        socketio.emit('screenshot_taken', {'filename': filename})
+        socketio.emit('show_loading_overlay')
+        details = self.get_stats_and_details(filename)
+        socketio.emit('hide_loading_overlay')
+
+        if details is not None:  # TODO add error exception
+            stats, game_details = details
+            prob = self.predict_probability(stats, game_details)
+
+            if prob is not None:
+                app_state.game_progress.append(prob)
+                socketio.emit('update_chart', {'win_probability': prob})
+                # _, team_composition, team_status = game_details
+                # update_player_status(team_status, team_composition)
+            else:
+                self.current_screenshots.pop()  # TODO make this more flexible by making optional
+
+            # call the custom event handler to process the game details
+            self.events_handler.handle_event(socketio, "game_details", (stats, game_details))
+        else:
+            self.current_screenshots.pop()  # TODO make this more flexible by making optional
+
     def move_screenshots_to_folder(self, game_result):
         """Move the current screenshots to a folder for the current game."""
         folder = self.create_game_folder(game_result)
@@ -60,7 +89,93 @@ class GameManager:
         self.earliest_timestamp = None
         return folder
 
-game_manager = GameManager()
-if app_state.screenshot_folder:
-    game_manager.screenshot_folder = app_state.screenshot_folder
+    def load_model(self, model_name):
+        print(f"Attempting to load model: {model_name}")
+        if model_name:
+            try:
+                self.predictor = self.load_user_predictor(model_name)
+                self.events_handler = self.load_user_events_handler(model_name)
+                print(f"Successfully loaded model: {model_name}")
+            except Exception as e:
+                print(f"Error loading {model_name} predictor: {e}")
+                # print traceback
+                import traceback
+                traceback.print_exc()
+        else:
+            print("No model name provided. Predictor set to None.")
+            self.predictor = None
 
+    def load_user_predictor(self, model_name):
+        model_path = os.path.join(app_state.model_directory, model_name, 'predictor.py')
+        print(f"Loading user predictor from path: {model_path}")
+
+        if not os.path.exists(model_path):
+            print(f"Model script not found at {model_path}")
+            raise ImportError(f"Model script not found at {model_path}")
+
+        spec = importlib.util.spec_from_file_location("user_predictor", model_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        print("Module successfully loaded.")
+
+        predictor_class = getattr(module, 'UserPredictor', None)
+        if not predictor_class:
+            print("User predictor class 'UserPredictor' not found in the script.")
+            raise ImportError("User predictor class 'UserPredictor' not found in the script.")
+
+        if not issubclass(predictor_class, PredictorInterface):
+            print("User predictor does not implement PredictorInterface.")
+            raise TypeError("User predictor must implement PredictorInterface.")
+
+        print("User predictor class successfully validated.")
+        return predictor_class()
+
+    def load_user_events_handler(self, model_name):
+        model_path = os.path.join(app_state.model_directory, model_name, 'events_handler.py')
+        print(f"Loading user events handler from path: {model_path}")
+
+        if not os.path.exists(model_path):
+            print(f"Model script not found at {model_path}")
+            raise ImportError(f"Model script not found at {model_path}")
+
+        spec = importlib.util.spec_from_file_location("user_events_handler", model_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        print("Module successfully loaded.")
+
+        events_handler_class = getattr(module, 'EventsHandler', None)
+        if not events_handler_class:
+            print("User events handler class 'EventsHandler' not found in the script.")
+            raise ImportError("User events handler class 'EventsHandler' not found in the script.")
+
+        if not issubclass(events_handler_class, EventsHandlerInterface):
+            print("User events handler does not implement EventsInterface.")
+            raise TypeError("User events handler must implement EventsInterface.")
+
+        print("User events handler class successfully validated.")
+        return events_handler_class()
+
+    def predict_probability(self, stats, game_details):
+        # print(f"Predicting probability with stats: {stats} and game details: {game_details}")
+        if self.predictor:
+            result = self.predictor.predict_probability(stats, game_details)
+            print(f"Prediction result: {result}")
+
+            # send the output to the event handler
+            self.events_handler.handle_event(socketio, "game_prediction", result)
+
+            return result
+        else:
+            print("No model loaded. Cannot predict probability.")
+
+    def get_stats_and_details(self, filename):
+        print(f"Getting stats and details from filename: {filename}")
+        if self.predictor:
+            result = self.predictor.get_stats_and_details(filename)
+            # print(f"Stats and details: {result}")
+            return result
+        else:
+            print("No model loaded. Cannot get stats and details.")
+            return None
+
+game_manager = GameManager()
