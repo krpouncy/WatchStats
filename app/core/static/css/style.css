@@ -1,324 +1,341 @@
 /* Default (Dark Mode) Theme */
 :root {
-  --background-color: black;
-  --text-color: #f8f9fa;
-  --navbar-bg: rgba(40, 40, 40, 0.7);
-  --btn-bg: rgba(255, 255, 255, 0.1);
-  --btn-hover-bg: rgba(255, 255, 255, 0.3);
-  --border-color: grey;
-  --overlay-bg: rgba(0, 0, 0, 0.6);
-  --link-color: #0dcaf0;
-  --link-hover-color: #0b9fc0;
-  --shadow-color: rgba(0, 0, 0, 0.5);
-  --glass-effect-bg: rgba(40, 40, 40, 0.5);
-  --glass-effect-border: rgba(255, 255, 255, 0.2);
+    --background-color: black;
+    --text-color: #f8f9fa;
+    --navbar-bg: rgba(40, 40, 40, 0.7);
+    --btn-bg: rgba(255, 255, 255, 0.1);
+    --btn-hover-bg: rgba(255, 255, 255, 0.3);
+    --border-color: grey;
+    --overlay-bg: rgba(0, 0, 0, 0.6);
+    --link-color: #0dcaf0;
+    --link-hover-color: #0b9fc0;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --glass-effect-bg: rgba(40, 40, 40, 0.5);
+    --glass-effect-border: rgba(255, 255, 255, 0.2);
 }
 
 /* Light Mode Theme */
 .light-mode {
-  --background-color: white;
-  --text-color: #212121;
-  --navbar-bg: rgba(245, 245, 245, 0.9);
-  --btn-bg: rgba(0, 0, 0, 0.1);
-  --btn-hover-bg: rgba(0, 0, 0, 0.2);
-  --border-color: lightgrey;
-  --overlay-bg: rgba(255, 255, 255, 0.7);
-  --link-color: #0056b3;
-  --link-hover-color: #003580;
-  --shadow-color: rgba(0, 0, 0, 0.2);
-  --glass-effect-bg: rgba(255, 255, 255, 0.7);
-  --glass-effect-border: rgba(0, 0, 0, 0.2);
+    --background-color: white;
+    --text-color: #212121;
+    --navbar-bg: rgba(245, 245, 245, 0.9);
+    --btn-bg: rgba(0, 0, 0, 0.1);
+    --btn-hover-bg: rgba(0, 0, 0, 0.2);
+    --border-color: lightgrey;
+    --overlay-bg: rgba(255, 255, 255, 0.7);
+    --link-color: #0056b3;
+    --link-hover-color: #003580;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --glass-effect-bg: rgba(255, 255, 255, 0.7);
+    --glass-effect-border: rgba(0, 0, 0, 0.2);
 }
 
 /* General body styling for sleek, modern look */
 body {
-  background: var(--background-color);
-  color: var(--text-color);
-  font-family: 'Roboto', sans-serif;
-  margin: 8px 0;
-  border-radius: 15px; /* Rounded edges for the body */
-  box-shadow: 0 8px 20px var(--shadow-color); /* Subtle shadow for the body */
-  overflow: auto; /* Enable scrolling */
+    background: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    margin: 8px 0;
+    border-radius: 15px; /* Rounded edges for the body */
+    box-shadow: 0 8px 20px var(--shadow-color); /* Subtle shadow for the body */
+    overflow: auto; /* Enable scrolling */
 }
 
 /* Main content container */
 #main-content {
-  background: linear-gradient(to bottom, rgba(18, 18, 18, 0), rgba(70, 70, 70, 1)), url('/core/static/images/background.jpg');
-  background-size: cover; /* Ensure the image covers the container */
-  background-attachment: fixed; /* Image stays fixed on scroll */
-  /*background-color: antiquewhite;*/
-  box-shadow: 0 4px 20px var(--shadow-color);
-  border: 1px solid var(--border-color); /* Border for container */
-  border-radius: 15px;
-  padding: 24px;
+    background: linear-gradient(to bottom, rgba(18, 18, 18, 0), rgba(70, 70, 70, 1)), url('/core/static/images/background.jpg');
+    background-size: cover; /* Ensure the image covers the container */
+    background-attachment: fixed; /* Image stays fixed on scroll */
+    /*background-color: antiquewhite;*/
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--border-color); /* Border for container */
+    border-radius: 15px;
+    padding: 24px;
 }
 
 /* Navbar with glass effect */
 .glass-effect {
-  background: var(--glass-effect-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-effect-border);
-  box-shadow: 0 8px 32px var(--shadow-color);
-  border-radius: 12px;
-  padding: 10px;
+    background: var(--glass-effect-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-effect-border);
+    box-shadow: 0 8px 32px var(--shadow-color);
+    border-radius: 12px;
+    padding: 10px;
 }
 
 /* Buttons */
 button,
 .btn {
-  background: var(--btn-bg);
-  border: 1px solid var(--glass-effect-border);
-  color: var(--text-color);
-  transition: all 0.3s ease-in-out;
-  border-radius: 8px;
+    background: var(--btn-bg);
+    border: 1px solid var(--glass-effect-border);
+    color: var(--text-color);
+    transition: all 0.3s ease-in-out;
+    border-radius: 8px;
 }
+
 button:hover,
 .btn:hover {
-  background: var(--btn-hover-bg);
+    background: var(--btn-hover-bg);
 }
 
 /* Links */
 a {
-  color: var(--link-color);
-  text-decoration: none;
-  transition: color 0.3s ease-in-out;
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
 }
+
 a:hover {
-  color: var(--link-hover-color);
-  text-decoration: underline;
+    color: var(--link-hover-color);
+    text-decoration: underline;
 }
 
 /* Loading overlay */
 #loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-  display: none; /* Ensure overlay is hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: none; /* Ensure overlay is hidden by default */
 }
+
 .overlay-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--overlay-bg);
-  backdrop-filter: blur(8px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-bg);
+    backdrop-filter: blur(8px);
 }
+
 .overlay-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: var(--text-color);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--text-color);
 }
 
 /* Footer or smaller components */
 .footer,
 .small-components {
-  background: var(--glass-effect-bg);
-  border-radius: 10px;
-  padding: 15px;
-  margin: 10px 0;
-  box-shadow: 0 4px 15px var(--shadow-color);
+    background: var(--glass-effect-bg);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    box-shadow: 0 4px 15px var(--shadow-color);
 }
 
 /* Navbar */
 .navbar {
-  border-radius: 15px !important;
-  background: var(--navbar-bg);
-  backdrop-filter: blur(10px);
-  padding: 10px 20px;
+    border-radius: 15px !important;
+    background: var(--navbar-bg);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
 }
 
 /* Navbar active buttons */
 .navbar .btn.active {
-  background: var(--btn-hover-bg);
-  color: var(--text-color);
-  border: 1px solid var(--glass-effect-border);
+    background: var(--btn-hover-bg);
+    color: var(--text-color);
+    border: 1px solid var(--glass-effect-border);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .navbar {
-    padding: 10px;
-  }
+    .navbar {
+        padding: 10px;
+    }
 
-  button,
-  .btn {
-    font-size: 14px;
-    padding: 8px;
-  }
+    button,
+    .btn {
+        font-size: 14px;
+        padding: 8px;
+    }
 }
 
 /* Theme-dependent classes */
 .theme-btn {
-  background: var(--btn-bg);
-  color: var(--text-color);
-  border: 1px solid var(--glass-effect-border);
-  transition: background-color 0.3s ease, color 0.3s ease;
+    background: var(--btn-bg);
+    color: var(--text-color);
+    border: 1px solid var(--glass-effect-border);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 .theme-btn:hover {
-  background: var(--btn-hover-bg);
+    background: var(--btn-hover-bg);
 }
 
 .theme-btn-danger {
-  background: var(--danger-bg, #dc3545);
-  color: var(--text-color);
-  border: 1px solid var(--glass-effect-border);
+    background: var(--danger-bg, #dc3545);
+    color: var(--text-color);
+    border: 1px solid var(--glass-effect-border);
 }
+
 .theme-btn-danger:hover {
-  background: darken(var(--danger-bg, #dc3545), 10%);
+    background: darken(var(--danger-bg, #dc3545), 10%);
 }
 
 .theme-btn-success {
-  background: var(--success-bg, #28a745);
-  color: var(--text-color);
+    background: var(--success-bg, #28a745);
+    color: var(--text-color);
 }
+
 .theme-btn-warning {
-  background: var(--warning-bg, #ffc107);
-  color: var(--text-color);
+    background: var(--warning-bg, #ffc107);
+    color: var(--text-color);
 }
+
 .theme-btn-secondary {
-  background: var(--btn-bg);
-  color: var(--text-color);
+    background: var(--btn-bg);
+    color: var(--text-color);
 }
 
 .theme-card {
-  background: var(--glass-effect-bg);
-  box-shadow: 0 4px 15px var(--shadow-color);
-  border-radius: 12px;
-  padding: 20px;
-  color: var(--text-color);
+    background: var(--glass-effect-bg);
+    box-shadow: 0 4px 15px var(--shadow-color);
+    border-radius: 12px;
+    padding: 20px;
+    color: var(--text-color);
 }
 
 .theme-container {
-  background: var(--glass-effect-bg);
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 4px 20px var(--shadow-color);
+    background: var(--glass-effect-bg);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 20px var(--shadow-color);
 }
 
 .theme-element {
-  background: var(--glass-effect-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  box-shadow: 0 2px 10px var(--shadow-color);
-  color: var(--text-color);
+    background: var(--glass-effect-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    color: var(--text-color);
 }
 
 .theme-bar {
-  background: var(--navbar-bg);
-  box-shadow: 0 -4px 15px var(--shadow-color);
+    background: var(--navbar-bg);
+    box-shadow: 0 -4px 15px var(--shadow-color);
 }
 
 .theme-scroll-container {
-  overflow-x: auto;
-  white-space: nowrap;
-  /*background: var(--glass-effect-bg);*/
-  /*padding: 10px;*/
-  /*border-radius: 10px;*/
-  /*box-shadow: 0 2px 15px var(--shadow-color);*/
+    overflow-x: auto;
+    white-space: nowrap;
+    /*background: var(--glass-effect-bg);*/
+    /*padding: 10px;*/
+    /*border-radius: 10px;*/
+    /*box-shadow: 0 2px 15px var(--shadow-color);*/
 }
 
 /* General Element Styling */
 /* Theme Element: Ensure Full Width and Consistent Spacing */
 .theme-element {
-  display: block; /* Ensure it spans the full width of the container */
-  width: 100%; /* Explicitly set the width to 100% */
-  background: var(--element-bg, rgba(60, 60, 60, 0.8)); /* Match the theme */
-  color: var(--text-color, #ffffff); /* Ensure good text contrast */
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2)); /* Optional border */
-  border-radius: 8px; /* Add rounded edges */
-  box-shadow: 0 2px 6px var(--shadow-color, rgba(0, 0, 0, 0.5)); /* Subtle shadow */
-  padding: 12px; /* Adjust padding for visual balance */
-  text-align: center; /* Keep text centered */
-  margin: 8px 0; /* Ensure vertical spacing between elements */
+    /*display: block; !* Ensure it spans the full width of the container *!*/
+    width: 100%; /* Explicitly set the width to 100% */
+    background: var(--element-bg, rgba(60, 60, 60, 0.8)); /* Match the theme */
+    color: var(--text-color, #ffffff); /* Ensure good text contrast */
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2)); /* Optional border */
+    border-radius: 8px; /* Add rounded edges */
+    box-shadow: 0 2px 6px var(--shadow-color, rgba(0, 0, 0, 0.5)); /* Subtle shadow */
+    padding: 12px; /* Adjust padding for visual balance */
+    text-align: center; /* Keep text centered */
+    margin: 8px 0; /* Ensure vertical spacing between elements */
 }
 
 
 /* Scrollable Sections */
 .theme-scroll-container {
-  overflow-y: auto;
-  max-height: 400px; /* Adjustable max height */
-  background: var(--glass-effect-bg);
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 2px 10px var(--shadow-color);
+    overflow-y: auto;
+    max-height: 400px; /* Adjustable max height */
+    background: var(--glass-effect-bg);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 2px 10px var(--shadow-color);
 }
 
 /* Table Styling for Better Readability */
 .theme-table {
-  color: var(--text-color, #ffffff); /* Ensure text is bright and readable */
-  background: var(--table-bg, rgba(60, 60, 60, 0.9)); /* Slightly lighter background */
-  border-radius: 12px;
-  overflow: hidden;
-  margin: 0;
-  box-shadow: 0 2px 10px var(--shadow-color, rgba(0, 0, 0, 0.5)); /* Subtle shadow */
+    color: var(--text-color, #ffffff); /* Ensure text is bright and readable */
+    background: var(--table-bg, rgba(60, 60, 60, 0.9)); /* Slightly lighter background */
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0;
+    box-shadow: 0 2px 10px var(--shadow-color, rgba(0, 0, 0, 0.5)); /* Subtle shadow */
 }
+
 .theme-table th {
-  background: var(--table-header-bg, rgba(80, 80, 80, 0.9)); /* Distinct header background */
-  color: var(--highlight-color, #ffd700); /* Use a gold accent for header text */
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+    background: var(--table-header-bg, rgba(80, 80, 80, 0.9)); /* Distinct header background */
+    color: var(--highlight-color, #ffd700); /* Use a gold accent for header text */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
+
 .theme-table td {
-  background: var(--table-cell-bg, rgba(50, 50, 50, 0.9)); /* Lighter cell background */
-  text-align: center;
-  color: var(--text-color, #ffffff); /* Ensure good contrast for text */
+    background: var(--table-cell-bg, rgba(50, 50, 50, 0.9)); /* Lighter cell background */
+    text-align: center;
+    color: var(--text-color, #ffffff); /* Ensure good contrast for text */
 }
+
 .theme-table .theme-row:hover {
-  background: var(--hover-bg, rgba(70, 70, 70, 1)); /* Slightly brighter on hover */
+    background: var(--hover-bg, rgba(70, 70, 70, 1)); /* Slightly brighter on hover */
 }
 
 /* Optional: Add a thin border between rows for separation */
 .theme-table td, .theme-table th {
-  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
 }
 
 /* Spacing for Table Section */
 #rules-section {
-  border: none; /* Remove border */
-  background: transparent; /* Make background transparent */
-  padding: 0; /* Remove padding */
+    border: none; /* Remove border */
+    background: transparent; /* Make background transparent */
+    padding: 0; /* Remove padding */
 }
-
 
 
 /* Buttons and Other Components */
 .theme-element.text-center div {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--highlight-color, #ffcc00);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--highlight-color, #ffcc00);
 }
 
 /* Adjust Margin and Padding */
 .mt-4 {
-  margin-top: 1.5rem;
+    margin-top: 1.5rem;
 }
+
 .my-4 {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
 }
+
 .p-2 {
-  padding: 0.5rem;
+    padding: 0.5rem;
 }
 
 /* Apply blur effect */
 .blur-effect {
-  filter: blur(5px); /* Adjust blur intensity */
-  opacity: 0.7; /* Optional: Adjust transparency */
-  pointer-events: none; /* Prevent interaction with blurred content */
-  transition: filter 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Smooth transition */
+    filter: blur(5px); /* Adjust blur intensity */
+    opacity: 0.7; /* Optional: Adjust transparency */
+    pointer-events: none; /* Prevent interaction with blurred content */
+    transition: filter 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Smooth transition */
 }
 
 /* Remove blur effect on hover (optional) */
 .blur-effect:hover {
-  filter: none;
-  opacity: 1;
-  pointer-events: auto;
+    filter: none;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* hide scrollbars */
+.grid-stack-item-content {
+    overflow: hidden !important;
 }

@@ -14,7 +14,7 @@ def client():
 def test_index_route_renders_correct_template(client):
     response = client.get('/')
     assert response.status_code == 200
-    assert b'core_index.html' in response.data
+    assert b'dashboard.html' in response.data
 
 def test_set_input_valid_type(client):
     response = client.post('/set-input', json={'input_type': 'PC'})

@@ -30,15 +30,21 @@ class GameManager:
         os.makedirs(folder_name, exist_ok=True)
         return folder_name
 
-    def take_screenshot(self):
-        """Take a screenshot and save it to the screenshot folder."""
-        eventlet.sleep(0.25)
+    def take_screenshot(self, delay=0.25, image_format='JPEG', quality=85):
+        """
+        Take a screenshot and save it to the screenshot folder.
+
+        :param delay: Delay in seconds before taking the screenshot. (default: 0.25)
+        :param image_format: Image format to save the screenshot. (default: 'JPEG') Options: BMP, JPEG, TIFF, PNG.
+        :param quality: Image quality (0-100) for the saved screenshot. (default: 85)
+        """
+        eventlet.sleep(delay)
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         if self.earliest_timestamp is None:
             self.earliest_timestamp = timestamp
         filename = os.path.join(self.screenshot_folder, f"screenshot_{timestamp}.png")
         screenshot = ImageGrab.grab()
-        screenshot.save(filename, 'JPEG', quality=85)
+        screenshot.save(filename, image_format, quality=quality)
         print(f"Screenshot saved as {filename}")
         self.current_screenshots.append(filename)
         return filename
@@ -59,8 +65,6 @@ class GameManager:
             if prob is not None:
                 app_state.game_progress.append(prob)
                 socketio.emit('update_chart', {'win_probability': prob})
-                # _, team_composition, team_status = game_details
-                # update_player_status(team_status, team_composition)
             else:
                 self.current_screenshots.pop()  # TODO make this more flexible by making optional
 
@@ -90,6 +94,7 @@ class GameManager:
         return folder
 
     def load_model(self, model_name):
+        """Load the user models and event handlers."""
         print(f"Attempting to load model: {model_name}")
         if model_name:
             try:
@@ -106,6 +111,7 @@ class GameManager:
             self.predictor = None
 
     def load_user_predictor(self, model_name):
+        """Load the user predictor class from the model directory."""
         model_path = os.path.join(app_state.model_directory, model_name, 'predictor.py')
         print(f"Loading user predictor from path: {model_path}")
 
@@ -131,6 +137,7 @@ class GameManager:
         return predictor_class()
 
     def load_user_events_handler(self, model_name):
+        """Load the user events handler class from the model directory."""
         model_path = os.path.join(app_state.model_directory, model_name, 'events_handler.py')
         print(f"Loading user events handler from path: {model_path}")
 
@@ -156,6 +163,7 @@ class GameManager:
         return events_handler_class()
 
     def predict_probability(self, stats, game_details):
+        """Predict the win probability for the current game."""
         # print(f"Predicting probability with stats: {stats} and game details: {game_details}")
         if self.predictor:
             result = self.predictor.predict_probability(stats, game_details)
@@ -169,6 +177,7 @@ class GameManager:
             print("No model loaded. Cannot predict probability.")
 
     def get_stats_and_details(self, filename):
+        """Get the stats and details for the current game."""
         print(f"Getting stats and details from filename: {filename}")
         if self.predictor:
             result = self.predictor.get_stats_and_details(filename)

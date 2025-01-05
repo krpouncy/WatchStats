@@ -138,7 +138,8 @@ function initChart() {
         max: 100,
       },
     },
-    responsive: true
+    responsive: true,
+    // maintainAspectRatio: false
   },
 });
 
@@ -330,8 +331,23 @@ function setGameOutcome(outcome) {
     .catch((error) => console.error('Error setting game outcome:', error));
 }
 
+// const sidebar = new Sortable(document.getElementById('sidebar-components'), {
+//     animation: 150,
+//     onEnd: (evt) => saveOrder('sidebar', evt.toArray()),
+// });
+
+function saveOrder(location, order) {
+    fetch('/save_order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ location, order }),
+    });
+}
+
 /*
   Ensure that "core.js" runs initCore() on page load,
   either by hooking into window.onload or DOMContentLoaded.
 */
+
+
 window.addEventListener('DOMContentLoaded', initCore);

@@ -32,6 +32,7 @@ base_path = get_project_root()
 paths = {
     "screenshots": os.path.join(base_path, "screenshots"),
     "models": os.path.join(base_path, "models"),
+    "user_components": os.path.join(base_path, "user_components"),
 }
 
 # Ensure directories exist
@@ -41,6 +42,7 @@ for path in paths.values():
 app_state.base_path = base_path
 app_state.screenshot_folder = paths["screenshots"]
 app_state.model_directory = paths['models']
+app_state.user_components_directory = paths['user_components']
 
 # TODO add functionality to select the default model (would prefer to not loading anything by default)
 app_state.current_model = "OW2_new"
