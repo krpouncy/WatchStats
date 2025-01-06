@@ -1,8 +1,11 @@
 # Created by .ignore support plugin (hsz.mobi)
 
+.idea/
+*.db
+
 # remove folders
 screenshots/
-models/
+user_components/
 
 ### Python template
 # Byte-compiled / optimized / DLL files
@@ -188,3 +191,4 @@ fabric.properties
 
 # idea folder, uncomment if you don't need it
 # .idea
+.qodo

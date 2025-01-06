@@ -3,36 +3,60 @@
 {% block title %}Core Dashboard{% endblock %}
 
 {% block extra_head %}
-{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.min.css">#}
-{#    <script src="https://cdn.jsdelivr.net/npm/gridstack/dist/gridstack.all.min.js"></script>#}
+    <!-- GridStack CSS/JS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.3.1/gridstack.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.3.1/gridstack-extra.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/10.3.1/gridstack-all.min.js"></script>
+    {{ super() }}
 {% endblock extra_head %}
 
+{% block navbar %}
+    <!-- Transparent and glossy navbar -->
+    <nav class="glass-effect navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand me-1" href="/">StatsWatch</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarButtons"
+                    aria-controls="navbarButtons" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarButtons">
+                <div class="d-flex ms-auto flex-lg-row flex-column justify-content-end align-items-lg-center">
+                    <button id="top-nav-button" class="btn btn-primary active me-lg-1 mb-lg-0 mb-2" onclick="location.href='/'">
+                        Now Playing
+                    </button>
+                    <button class="btn btn-primary me-lg-1 mb-lg-0 mb-2">My Games</button>
+                    <button class="btn btn-primary me-lg-1 mb-lg-0 mb-2" onclick="location.href='/about'">
+                        About
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+{% endblock navbar %}
+
 {% block content %}
-    <!-- Input Section remains fixed -->
+    <!-- Input Section (Glass + Centered + Buttons) -->
     <div id="input-section" class="glass-effect text-center mb-4">
-        <p class="lead">Select your input method:</p>
-        <button class="theme-btn me-4" onclick="setInput('PC')">PC</button>
+        <p class="lead mb-3">Select your input method:</p>
+        <button class="theme-btn me-3" onclick="setInput('PC')">PC</button>
         <button class="theme-btn" onclick="setInput('Controller')">Controller</button>
     </div>
 
     <!-- Grid-Stack for Draggable/Resizable Components -->
-    <div class="grid-stack"></div>
+    <div class="grid-stack" style="background-color: rgba(33,37,41,0.21); border-radius: 15px"></div>
 
     <!-- Screenshots Section -->
-    <div class="row mt-4">
-        <div class="theme-container col-12">
-            <h3 class="text-left">Screenshots</h3>
-            <div id="screenshot-row" class="theme-scroll-container">
-                <!-- Images dynamically inserted -->
-            </div>
+    <div class="theme-container my-5 mx-3">
+        <h3 class="text-left">Screenshots</h3>
+        <div id="screenshot-row" class="theme-scroll-container" style="background-color: rgba(33,37,41,0.21); padding: 16px;">
+            <!-- Images dynamically inserted -->
         </div>
     </div>
 {% endblock content %}
 
 {% block extra_content %}
-    <div id="end-game-bar" class="fixed-bottom theme-bar p-1">
+    <div id="end-game-bar" class="fixed-bottom theme-bar p-3">
         <button id="end-game-btn" class="theme-btn-danger">END GAME</button>
         <button id="reset-input-btn" class="theme-btn-secondary">Change Input Type</button>
         <div id="game-outcome-options" class="mt-3" style="display: none;">
@@ -48,60 +72,82 @@
 {% block extra_scripts %}
     {{ super() }}
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        let grid = GridStack.init({
-            margin: 2,
-            float: true, // Allows smoother dragging and resizing
-            acceptWidgets: true // Enables adding widgets dynamically
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+            let grid = GridStack.init({
+                margin: 2,
+                column: 12,
+                columnOpts: {
+                    breakpoints: [
+                        {w: 700, c: 1},
+                        {w: 850, c: 3},
+                        {w: 950, c: 6},
+                        {w: 1100, c: 8}
+                    ]
+                },
+                float: true,
+                acceptWidgets: true
+            });
 
-        {% for component in components %}
-            grid.addWidget(
-              `<div id="{{ component.id }}">
-                 <div id="{{ component.config.parent }}" class="grid-stack-item-content">
-                   {{ component.html | safe }}
-                 </div>
-               </div>`,
-              {
-                x: {{ component.config.x }},
-                y: {{ component.config.y }},
-                w: {{ component.config.width }},
-                h: {{ component.config.height }},
-              }
-            );
-        {% endfor %}
+            {% for component in components %}
+                grid.addWidget(
+                    `<div id="{{ component.id }}">
+                       <div id="{{ component.config.parent }}" class="grid-stack-item-content">
+                         {{ component.html | safe }}
+                       </div>
+                     </div>`,
+                    {
+                        x: {{ component.config.x }},
+                        y: {{ component.config.y }},
+                        w: {{ component.config.width }},
+                        h: {{ component.config.height }},
+                        xPercent: {{ component.config.xPercent|default(0) }},
+                        widthPercent: {{ component.config.widthPercent|default(0) }},
+                        autoPosition: {% if component.config.x is defined %}false{% else %}true{% endif %}
+                    }
+                );
+            {% endfor %}
 
-        // Listen for the 'change' event to save the layout
-        grid.on('change', function(event, items){
-            // send alert with that shows layout
-            const layout = items.map(item => ({
-                parent: item.el.children[0].id,
-                id: item.el.id,
-                x: item.x,
-                y: item.y,
-                width: item.w,
-                height: item.h
-            }));
-            fetch('/save_layout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ layout })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    console.log('Layout saved successfully!');
-                } else {
-                    console.error('Error saving layout:', data);
+            grid.on('change', function (event, items) {
+                const currentColumns = grid.getColumn();
+                const layout = {
+                    columns: currentColumns,
+                    items: items.map(item => ({
+                        parent: item.el.children[0].id,
+                        id: item.el.id,
+                        x: item.x,
+                        y: item.y,
+                        width: item.w,
+                        height: item.h,
+                        xPercent: (item.x / currentColumns) * 100,
+                        widthPercent: (item.w / currentColumns) * 100
+                    }))
+                };
+
+                fetch('/save_layout', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(layout)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            console.log('Layout saved successfully!');
+                        } else {
+                            console.error('Error saving layout:', data);
+                        }
+                    })
+                    .catch(error => console.error('Error saving layout:', error));
+            });
+
+            grid.on('change', function () {
+                if (window.innerWidth <= 700) {
+                    grid.compact();
                 }
-            })
-            .catch(error => console.error('Error saving layout:', error));
+            });
         });
-
-    });
-
     </script>
+
     {% for component in components %}
-    <script>{{ component.js | safe }}</script>
+        <script>{{ component.js | safe }}</script>
     {% endfor %}
 {% endblock extra_scripts %}

@@ -44,8 +44,8 @@ app_state.screenshot_folder = paths["screenshots"]
 app_state.model_directory = paths['models']
 app_state.user_components_directory = paths['user_components']
 
-# TODO add functionality to select the default model (would prefer to not loading anything by default)
-app_state.current_model = "OW2_new"
 from .game_manager import game_manager
 game_manager.screenshot_folder = app_state.screenshot_folder
+
+app_state.current_model = "OW2_new" # TODO add functionality to select the default model
 game_manager.load_model(app_state.current_model)

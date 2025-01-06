@@ -11,11 +11,6 @@ from .game_manager import game_manager
 from .state import app_state
 
 
-# @core_bp.route('/')
-# def index():
-#     """ Renders the core index or main page (no premium data). """
-#     return render_template('dashboard.html')  # This could be your core HTML template
-
 @core_bp.route('/')
 def dashboard():
     components = []
@@ -48,9 +43,18 @@ def dashboard():
 
     # Sort components by 'order' if specified in their config.json
     components.sort(key=lambda x: x['config'].get('order', 0))
-
     return render_template('dashboard.html', components=components)
 
+
+@core_bp.route('/about')
+def about():
+    return render_template('about.html')
+
+@core_bp.route('/load')
+def load_route():
+    # Emit a page load event to the client
+    game_manager.events_handler.handle_event(socketio, 'page_load')
+    return jsonify({'status': 'success'})
 
 @core_bp.route('/set-input', methods=['POST'])
 def set_input():
@@ -61,10 +65,12 @@ def set_input():
         return jsonify({"status": "success", "input_type": app_state.input_type})
     return jsonify({"status": "error", "message": "Invalid input type"}), 400
 
+
 @core_bp.route('/get-input', methods=['GET'])
 def get_input():
     """Get the current input type."""
     return jsonify({"input_type": app_state.input_type})
+
 
 @core_bp.route('/reset-input', methods=['POST'])
 def reset_input():
@@ -74,17 +80,19 @@ def reset_input():
     response.delete_cookie('input_type')
     return response
 
+
 @core_bp.route('/api/chart-data')
 def get_chart_data():
     """Get the chart data for the win probability."""
     return jsonify({
-        "labels": [f"Event {i+1}" for i in range(len(app_state.game_progress))],
+        "labels": [f"Event {i + 1}" for i in range(len(app_state.game_progress))],
         "datasets": [{
             "label": "Winning Probability",
             "data": [round(prob * 100, 1) for prob in app_state.game_progress],
             "backgroundColor": ["#4caf50" if prob > 0.5 else "#f44336" for prob in app_state.game_progress]
         }]
     })
+
 
 @core_bp.route('/reset-chart', methods=['POST'])
 def reset_chart():
@@ -93,11 +101,13 @@ def reset_chart():
     socketio.emit('reset_chart')
     return jsonify({'status': 'success'})
 
+
 @core_bp.route('/screenshots/<path:filename>')
 def serve_screenshot(filename):
     """Serve a screenshot file."""
     screenshot_folder = os.path.abspath(game_manager.screenshot_folder)
     return send_from_directory(screenshot_folder, filename)
+
 
 @core_bp.route('/api/screenshots')
 def get_screenshots():
@@ -110,6 +120,7 @@ def get_screenshots():
     files.sort(key=lambda x: os.path.getmtime(os.path.join(screenshot_folder, x)))
 
     return jsonify({'screenshots': files})
+
 
 @core_bp.route('/set-game-outcome', methods=['POST'])
 def set_game_outcome():
@@ -124,18 +135,6 @@ def set_game_outcome():
     socketio.emit('game_outcome_set', {'outcome': game_result, 'folder': folder})
     return jsonify({'status': 'success', 'folder': folder})
 
-# TODO GET THIS WORKING AND DETERMINE IF NECESSARY
-# @core_bp.after_request
-# def apply_csp(response):
-#     # response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self';"
-#     # update to Content-Security-Policy: default-src 'self'; style-src 'self' https://cdnjs.cloudflare.com
-#     # TODO remove unsafe-inline and add nonce for inline scripts
-#     response.headers['Content-Security-Policy'] = (
-#         "default-src 'self'; "
-#         "script-src 'self' https://cdn.jsdelivr.net https://cdn.socket.io; "
-#         "style-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'unsafe-inline'; "
-#     )
-#     return response
 
 @core_bp.route('/save_layout', methods=['POST'])
 def save_layout():
@@ -148,7 +147,7 @@ def save_layout():
         component_name = item['id'].replace(f"{folder_name}_", "")
         component_dir = os.path.join(app_state.user_components_directory, folder_name, component_name)
         config_path = os.path.join(str(component_dir), 'config.json')
-        print(component_dir, '\n',config_path)
+        print(component_dir, '\n', config_path)
         if os.path.exists(config_path):
             with open(config_path, 'r') as f:
                 config = json.load(f)
@@ -162,3 +161,16 @@ def save_layout():
                 json.dump(config, f)
 
     return jsonify({'status': 'success'})
+
+# TODO GET THIS WORKING AND DETERMINE IF NECESSARY
+# @core_bp.after_request
+# def apply_csp(response):
+#     # response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self';"
+#     # update to Content-Security-Policy: default-src 'self'; style-src 'self' https://cdnjs.cloudflare.com
+#     # TODO remove unsafe-inline and add nonce for inline scripts
+#     response.headers['Content-Security-Policy'] = (
+#         "default-src 'self'; "
+#         "script-src 'self' https://cdn.jsdelivr.net https://cdn.socket.io; "
+#         "style-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'unsafe-inline'; "
+#     )
+#     return response

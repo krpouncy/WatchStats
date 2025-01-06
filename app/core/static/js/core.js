@@ -350,4 +350,8 @@ function saveOrder(location, order) {
 */
 
 
-window.addEventListener('DOMContentLoaded', initCore);
+// call load but don't worry about response
+window.addEventListener('DOMContentLoaded', function () {
+  fetch('/load');
+  initCore(); // TODO hint at where to move the chart calls with page_load
+});

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}About{% endblock %}
+
+{% block navbar %}
+    <!-- Transparent and glossy navbar -->
+    <nav class="glass-effect navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container-fluid">
+            <!-- Navbar brand -->
+            <a class="navbar-brand me-1" href="/">StatsWatch</a>
+
+            <!-- Toggler/collapsible button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarButtons"
+                    aria-controls="navbarButtons" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Collapsible content -->
+            <div class="collapse navbar-collapse" id="navbarButtons">
+                <div class="d-flex ms-auto flex-lg-row flex-column justify-content-end align-items-lg-center">
+                    <button class="btn btn-primary active me-lg-1 mb-lg-0 mb-2" onclick="location.href='/'">Now
+                        Playing
+                    </button>
+                    <button class="btn btn-primary me-lg-1 mb-lg-0 mb-2">My Games</button>
+                    <button class="btn btn-primary me-lg-1 mb-lg-0 mb-2" onclick="location.href='/about'">About</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+{% endblock navbar %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>About</h1>
+        <p>This software is designed to track stats through snapshots, providing users with the ability to add and customize UI elements on a grid. These elements can be moved around freely, allowing for a personalized layout.</p>
+        <p>Users can connect events to their code, enabling dynamic UI updates when specific events are triggered. Originally, this application was developed to track Overwatch 2 (OW2) games, supporting both keyboard and controller inputs.</p>
+
+        <h2>Features</h2>
+        <ul>
+            <li>Customizable UI elements on a grid layout</li>
+            <li>Event-driven UI updates</li>
+            <li>Support for keyboard and controller inputs</li>
+        </ul>
+
+        <h2>Credits</h2>
+        <ul>
+            <li>GridStack: </li>
+            <li>Default Background Image <a href="https://www.vecteezy.com/free-vector/abstract">by Vecteezy</a></li>
+            <li>Flask: A lightweight WSGI web application framework.</li>
+            <li>Flask-SocketIO: An extension for Flask enabling WebSocket communication.</li>
+            <li>Chart.js: A JavaScript library for creating charts and graphs.</li>
+            <li>Socket.IO: A library for real-time, bidirectional, and event-based communication.</li>
+            <li>Bootstrap: A front-end framework for developing responsive and mobile-first websites.</li>
+            <li>SortableJS: A JavaScript library for reorderable drag-and-drop lists.</li>
+        </ul>
+    </div>
+{% endblock %}

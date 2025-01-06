@@ -51,10 +51,11 @@ class GameManager:
 
     def process_screenshot(self):
         """Process the current screenshot and update the win probability."""
+        socketio.emit('show_loading_overlay')
+        socketio.sleep(0.25) # this is necessary and allows the loading overlay to be displayed
         filename = self.take_screenshot()
 
         socketio.emit('screenshot_taken', {'filename': filename})
-        socketio.emit('show_loading_overlay')
         details = self.get_stats_and_details(filename)
         socketio.emit('hide_loading_overlay')
 
@@ -62,11 +63,15 @@ class GameManager:
             stats, game_details = details
             prob = self.predict_probability(stats, game_details)
 
+            # TODO remove the chart code
             if prob is not None:
                 app_state.game_progress.append(prob)
-                socketio.emit('update_chart', {'win_probability': prob})
+                socketio.emit('update_chart', {'win_probability': prob}) # TODO make the chart a component
             else:
                 self.current_screenshots.pop()  # TODO make this more flexible by making optional
+
+            # add win probability to the game details to the tuple
+            game_details = (game_details[0], game_details[1], prob) # TODO make this more flexible REMOVE
 
             # call the custom event handler to process the game details
             self.events_handler.handle_event(socketio, "game_details", (stats, game_details))
