@@ -1,10 +1,11 @@
-import ctypes  # TODO consider using another library like (inputs or pynput) instead of keyboard (DOESN"T WORK)
+import ctypes  # TODO consider using another library like (inputs or pynput) instead of 'keyboard' (DOESN"T WORK)
 import traceback
 
 import eventlet
 
 from .game_manager import game_manager
 from .state import app_state
+
 
 # XInput structures and constants
 class XinputGamepad(ctypes.Structure):
@@ -18,14 +19,17 @@ class XinputGamepad(ctypes.Structure):
         ("sThumbRY", ctypes.c_short),
     ]
 
+
 class XinputState(ctypes.Structure):
     _fields_ = [
         ("dwPacketNumber", ctypes.c_ulong),
         ("Gamepad", XinputGamepad)
     ]
 
+
 XINPUT_GAMEPAD_BACK = 0x0020
 VK_TAB = 0x09
+
 
 def get_controller_state(controller_id=0):
     """Get the state of a controller"""
@@ -39,9 +43,11 @@ def get_controller_state(controller_id=0):
     else:
         return None
 
+
 def is_key_pressed(vk_code):
     """Check if a specific key is pressed."""
     return ctypes.windll.user32.GetAsyncKeyState(vk_code) & 0x8000
+
 
 def input_listener():
     """Listen for input events."""

@@ -1,6 +1,9 @@
 class AppState:
+    """
+    Application state class to store global variables and state datas
+    """
     input_type = "Controller"  # Default to "Keyboard"
-    game_progress = []
+    state_data = {} # Store state data or global variables
     base_path = None
     screenshot_folder = None
     model_directory = None

@@ -23,14 +23,17 @@ class PredictorInterface(ABC):
 
 class EventsHandlerInterface(ABC):
     @abstractmethod
-    def handle_event(self, socket_object, event_name, payload):
+    def handle_event(self, socket_object, event_name, payload=None):
         """
         Abstract method to handle the given event with the given payload.
         """
+
+        # established events: game_details, game_outcome_set, page_load
+
         # EXAMPLE:
         # if event_name == "game_details":
         #     # calculate the team_status and update the player status
-        #     stats, game_details = payload
+        #     stats, game_details, win_probability = payload
         #     time, team_composition = game_details
         #
         #     # Use the socket object to emit information to the web server

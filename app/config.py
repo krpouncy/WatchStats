@@ -1,6 +1,9 @@
+# app/config.py
+
 class DefaultConfig:
     DEBUG = True
     TESTING = False
+
 
 class TestingConfig(DefaultConfig):
     TESTING = True

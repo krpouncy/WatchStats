@@ -50,11 +50,14 @@ def dashboard():
 def about():
     return render_template('about.html')
 
+
+# Routes for programmable events
 @core_bp.route('/load')
 def load_route():
     # Emit a page load event to the client
     game_manager.events_handler.handle_event(socketio, 'page_load')
     return jsonify({'status': 'success'})
+
 
 @core_bp.route('/set-input', methods=['POST'])
 def set_input():
@@ -79,27 +82,6 @@ def reset_input():
     response = jsonify({'status': 'success'})
     response.delete_cookie('input_type')
     return response
-
-
-@core_bp.route('/api/chart-data')
-def get_chart_data():
-    """Get the chart data for the win probability."""
-    return jsonify({
-        "labels": [f"Event {i + 1}" for i in range(len(app_state.game_progress))],
-        "datasets": [{
-            "label": "Winning Probability",
-            "data": [round(prob * 100, 1) for prob in app_state.game_progress],
-            "backgroundColor": ["#4caf50" if prob > 0.5 else "#f44336" for prob in app_state.game_progress]
-        }]
-    })
-
-
-@core_bp.route('/reset-chart', methods=['POST'])
-def reset_chart():
-    """Reset the chart data."""
-    app_state.game_progress = []
-    socketio.emit('reset_chart')
-    return jsonify({'status': 'success'})
 
 
 @core_bp.route('/screenshots/<path:filename>')
@@ -132,7 +114,8 @@ def set_game_outcome():
     folder = game_manager.move_screenshots_to_folder(game_result)
     print(f"Moved screenshots to {folder}")
 
-    socketio.emit('game_outcome_set', {'outcome': game_result, 'folder': folder})
+    game_manager.events_handler.handle_event(socketio, 'game_outcome_set', {'outcome': game_result, 'folder': folder})
+
     return jsonify({'status': 'success', 'folder': folder})
 
 
@@ -140,7 +123,6 @@ def set_game_outcome():
 def save_layout():
     data = request.json
     layout = data.get('layout', [])
-
     # Update each component's configuration file
     for item in layout:
         folder_name = item['parent']
@@ -162,7 +144,7 @@ def save_layout():
 
     return jsonify({'status': 'success'})
 
-# TODO GET THIS WORKING AND DETERMINE IF NECESSARY
+# TODO GET THIS WORKING AND DETERMINE IF SECURITY IS NECESSARY
 # @core_bp.after_request
 # def apply_csp(response):
 #     # response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self';"

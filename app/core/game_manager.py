@@ -12,12 +12,27 @@ from app import socketio
 from models import PredictorInterface, EventsHandlerInterface
 from .state import app_state
 
+# Create empty classes for testing purposes
+class DummyPredictorInterface(PredictorInterface):
+    def predict_probability(self, stats, game_details):
+        return 0.5
+
+    def get_stats_and_details(self, filename):
+        return None
+
+class DummyEventsHandlerInterface(EventsHandlerInterface):
+    def handle_event(self, socket_object, event_name, payload=None):
+        pass
 
 class GameManager:
     def __init__(self, screenshot_folder='screenshots'):
         self.earliest_timestamp = None
         self.current_screenshots = []
         self.screenshot_folder = screenshot_folder
+
+        # initialize the predictor and events handler
+        self.predictor = DummyPredictorInterface()
+        self.events_handler = DummyEventsHandlerInterface()
 
         # print current working directory
         print("Current working directory: ", os.getcwd())
@@ -52,7 +67,7 @@ class GameManager:
     def process_screenshot(self):
         """Process the current screenshot and update the win probability."""
         socketio.emit('show_loading_overlay')
-        socketio.sleep(0.25) # this is necessary and allows the loading overlay to be displayed
+        socketio.sleep(0.25)  # this is necessary and allows the loading overlay to be displayed
         filename = self.take_screenshot()
 
         socketio.emit('screenshot_taken', {'filename': filename})
@@ -63,20 +78,13 @@ class GameManager:
             stats, game_details = details
             prob = self.predict_probability(stats, game_details)
 
-            # TODO remove the chart code
-            if prob is not None:
-                app_state.game_progress.append(prob)
-                socketio.emit('update_chart', {'win_probability': prob}) # TODO make the chart a component
-            else:
-                self.current_screenshots.pop()  # TODO make this more flexible by making optional
-
             # add win probability to the game details to the tuple
-            game_details = (game_details[0], game_details[1], prob) # TODO make this more flexible REMOVE
+            game_details = (game_details[0], game_details[1], prob)  # TODO make this more flexible REMOVE
 
             # call the custom event handler to process the game details
             self.events_handler.handle_event(socketio, "game_details", (stats, game_details))
         else:
-            self.current_screenshots.pop()  # TODO make this more flexible by making optional
+            self.current_screenshots.pop()  # TODO make this more flexible by making optional to remove if no details
 
     def move_screenshots_to_folder(self, game_result):
         """Move the current screenshots to a folder for the current game."""
@@ -155,10 +163,10 @@ class GameManager:
         spec.loader.exec_module(module)
         print("Module successfully loaded.")
 
-        events_handler_class = getattr(module, 'EventsHandler', None)
+        events_handler_class = getattr(module, 'UserEventsHandler', None)
         if not events_handler_class:
-            print("User events handler class 'EventsHandler' not found in the script.")
-            raise ImportError("User events handler class 'EventsHandler' not found in the script.")
+            print("User events handler class 'UserEventsHandler' not found in the script.")
+            raise ImportError("User events handler class 'UserEventsHandler' not found in the script.")
 
         if not issubclass(events_handler_class, EventsHandlerInterface):
             print("User events handler does not implement EventsInterface.")
@@ -191,5 +199,6 @@ class GameManager:
         else:
             print("No model loaded. Cannot get stats and details.")
             return None
+
 
 game_manager = GameManager()
