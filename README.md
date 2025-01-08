@@ -25,3 +25,24 @@ A flexible, modular application for tracking, analyzing, and visualizing in-game
    Install the required Python dependencies. For example:
    ```bash
    pip install -r requirements.txt
+
+## TO-DO
+
+### **Features to Add**
+- **Model Selection:**
+  - Allow the user to choose from different model directories dynamically (currently, it only selects the first discovered model).
+  - Implement a search/filter mechanism for easier navigation between models.
+
+- **UI Customization:**
+  - Enable users to disable or hide specific UI elements based on their preferences.
+  - Provide customization options for themes, including colors, fonts, and layouts.
+  - Allow for uploading custom backgrounds or selecting from predefined options.
+
+- **Expanded Functionality:**
+  - Introduce more actions beyond screenshots, such as:
+    - Real-time video recording.
+    - Data export (e.g., CSV, JSON).
+    - Annotations or notes for specific game events.
+  - Add a **game browser** to view and manage recorded screenshots:
+    - Include sorting, filtering, and tagging options for screenshots.
+    - Provide a thumbnail preview for quick access.
