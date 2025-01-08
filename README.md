@@ -16,6 +16,14 @@ A flexible, modular application for tracking, analyzing, and visualizing in-game
 - **Modular Architecture**  
   Add new models or HTML elements without modifying core functionality. Simply place your custom scripts under the designated model directory, and `GameManager` will handle the rest.
 
+### Prerequisites
+
+This project was created using **Python 3.9**. To ensure compatibility, please make sure you have Python 3.9 installed. You can check your Python version by running:
+
+```bash
+python --version
+```
+
 ## Getting Started
 
 1. **Clone the Repository**  
