@@ -1,0 +1,5 @@
+eventlet==0.38.2
+Flask==3.1.0
+Flask_SocketIO==5.4.1
+Pillow==11.1.0
+pytest==8.3.4
