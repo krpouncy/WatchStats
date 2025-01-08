@@ -26,9 +26,30 @@ A flexible, modular application for tracking, analyzing, and visualizing in-game
    ```bash
    pip install -r requirements.txt
 
+3. **Run the Program**
+   ```bash
+   python main.py
+
+4. **Visit the Application in a Browser**
+   ```bash
+   localhost:5000/
+
+5. **Customize for Your Needs**
+
+   Visit https://github.com/krpouncy/OWTracker for an example program that tracks OW games.
+   
+## Things to Keep in Mind:
+- Currently, only the inputs `TAB` on PC and `Back Button` for Xbox are registered as screenshot buttons. 
+- The Xbox controller is the default input at start-up.
+- The application only takes screenshots of the primary monitor.
+
 ## TO-DO
 
 ### **Features to Add**
+- **More Detailed Documentation**
+  - Create more examples of how WatchStats could be used for different projects.
+  - Explanation of creating the `predictor.py`, which extends `UserPredictor` and `events_handler.py`, which extends `UserEventsHandler`. More details can be found in the `models\__init__.py` file.
+  
 - **Model Selection:**
   - Allow the user to choose from different model directories dynamically (currently, it only selects the first discovered model).
   - Implement a search/filter mechanism for easier navigation between models.
