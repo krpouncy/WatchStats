@@ -107,6 +107,7 @@ body {
     height: 100%;
     z-index: 9999;
     display: none;
+    opacity: 0.85;
 }
 
 .overlay-backdrop {

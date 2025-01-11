@@ -74,7 +74,7 @@ class GameManager:
         details = self.get_stats_and_details(filename)
         socketio.emit('hide_loading_overlay')
 
-        if details is not None:  # TODO add error exception
+        if details is not None:
             stats, game_details = details
             prob = self.predict_probability(stats, game_details)
 
@@ -179,23 +179,30 @@ class GameManager:
         """Predict the win probability for the current game."""
         # print(f"Predicting probability with stats: {stats} and game details: {game_details}")
         if self.predictor:
-            result = self.predictor.predict_probability(stats, game_details)
-            print(f"Prediction result: {result}")
+            try:
+                result = self.predictor.predict_probability(stats, game_details)
+                print(f"Prediction result: {result}")
 
-            # send the output to the event handler
-            self.events_handler.handle_event(socketio, "game_prediction", result)
+                # send the output to the event handler
+                self.events_handler.handle_event(socketio, "game_prediction", result)
 
-            return result
+                return result
+            except Exception as e:
+                print(f"Error predicting probability: {e}")
+                return None
         else:
             print("No model loaded. Cannot predict probability.")
+            return None
 
     def get_stats_and_details(self, filename):
         """Get the stats and details for the current game."""
         print(f"Getting stats and details from filename: {filename}")
         if self.predictor:
-            result = self.predictor.get_stats_and_details(filename)
-            # print(f"Stats and details: {result}")
-            return result
+            try:
+                return self.predictor.get_stats_and_details(filename)
+            except Exception as e:
+                print(f"Error getting stats and details: {e}")
+                return None
         else:
             print("No model loaded. Cannot get stats and details.")
             return None
