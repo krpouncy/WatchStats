@@ -6,6 +6,7 @@ import os
 from flask import render_template, request, jsonify, send_from_directory
 
 from app import socketio
+from models import HandlerEvent
 from . import core_bp
 from .game_manager import game_manager
 from .state import app_state
@@ -55,7 +56,7 @@ def about():
 @core_bp.route('/load')
 def load_route():
     # Emit a page load event to the client
-    game_manager.events_handler.handle_event(socketio, 'page_load')
+    game_manager.events_handler.handle_event(socketio, HandlerEvent.PAGE_LOAD, payload=None)
     return jsonify({'status': 'success'})
 
 
@@ -114,7 +115,7 @@ def set_game_outcome():
     folder = game_manager.move_screenshots_to_folder(game_result)
     print(f"Moved screenshots to {folder}")
 
-    game_manager.events_handler.handle_event(socketio, 'game_outcome_set', {'outcome': game_result, 'folder': folder})
+    game_manager.events_handler.handle_event(socketio, HandlerEvent.GAME_OUTCOME_SET, {'outcome': game_result, 'folder': folder})
 
     return jsonify({'status': 'success', 'folder': folder})
 

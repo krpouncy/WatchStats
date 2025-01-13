@@ -1,5 +1,14 @@
 # app/core/predictor_interface.py
 from abc import ABC, abstractmethod
+from enum import Enum, unique
+
+@unique
+class HandlerEvent(Enum):
+    """Defines the events handled by the UserEventsHandler."""
+    GAME_DETAILS = "game_details"
+    GAME_OUTCOME_SET = "game_outcome_set"
+    PAGE_LOAD = "page_load"
+    GAME_PREDICTION = "game_prediction"
 
 class PredictorInterface(ABC):
     @abstractmethod
@@ -23,15 +32,13 @@ class PredictorInterface(ABC):
 
 class EventsHandlerInterface(ABC):
     @abstractmethod
-    def handle_event(self, socket_object, event_name, payload=None):
+    def handle_event(self, socket_object, event_name, payload):
         """
         Abstract method to handle the given event with the given payload.
         """
 
-        # established events: game_details, game_outcome_set, page_load
-
         # EXAMPLE:
-        # if event_name == "game_details":
+        # if event_name == HandlerEvent.GAME_DETAILS:
         #     # calculate the team_status and update the player status
         #     stats, game_details, win_probability = payload
         #     time, team_composition = game_details

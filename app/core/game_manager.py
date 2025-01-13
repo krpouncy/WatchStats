@@ -9,7 +9,7 @@ import eventlet
 from PIL import ImageGrab
 
 from app import socketio
-from models import PredictorInterface, EventsHandlerInterface
+from models import PredictorInterface, EventsHandlerInterface, HandlerEvent
 from .state import app_state
 
 # Create empty classes for testing purposes
@@ -82,7 +82,7 @@ class GameManager:
             game_details = (game_details[0], game_details[1], prob)  # TODO make this more flexible REMOVE
 
             # call the custom event handler to process the game details
-            self.events_handler.handle_event(socketio, "game_details", (stats, game_details))
+            self.events_handler.handle_event(socketio, HandlerEvent.GAME_DETAILS, (stats, game_details))
         else:
             self.current_screenshots.pop()  # TODO make this more flexible by making optional to remove if no details
 
@@ -184,7 +184,7 @@ class GameManager:
                 print(f"Prediction result: {result}")
 
                 # send the output to the event handler
-                self.events_handler.handle_event(socketio, "game_prediction", result)
+                self.events_handler.handle_event(socketio, HandlerEvent.GAME_PREDICTION, result)
 
                 return result
             except Exception as e:
