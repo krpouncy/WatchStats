@@ -83,8 +83,8 @@ class GameManager:
 
             # call the custom event handler to process the game details
             self.events_handler.handle_event(socketio, HandlerEvent.GAME_DETAILS, (stats, game_details))
-        else:
-            self.current_screenshots.pop()  # TODO make this more flexible by making optional to remove if no details
+        # else:
+        #     self.current_screenshots.pop()  # TODO make this more flexible by making optional to remove if no details
 
     def move_screenshots_to_folder(self, game_result):
         """Move the current screenshots to a folder for the current game."""
