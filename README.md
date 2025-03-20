@@ -1,6 +1,8 @@
 # Game Statistics Tracker
 
-A flexible, modular application for tracking, analyzing, and visualizing in-game statistics by processing screenshots. This tool enables you to capture screenshots, extract relevant data, and create custom logic or visualizations by implementing your own classes and UI components to suit your needs.
+![image](https://github.com/user-attachments/assets/d0e21214-604e-4669-bfba-ba04cbb27321)
+
+A flexible, modular application for tracking, analyzing, and visualizing in-game statistics by processing screenshots. This tool enables you to capture screenshots, extract relevant data, and create custom logic or visualizations by implementing your own classes and UI widgets to suit your needs.
 
 ## Key Features
 
@@ -50,6 +52,16 @@ python --version
 - Currently, only the inputs `TAB` on PC and `Back Button` for Xbox are registered as screenshot buttons. 
 - The Xbox controller is the default input at start-up.
 - The application only takes screenshots of the primary monitor.
+
+## Creating Widgets for the Dashboard
+As of now, widgets are stored in the `components\default` folder.
+
+Each module is self-contained in its own folder and includes the following files:
+- component.html → Defines the module’s HTML structure and embeds CSS for styling.
+- component.js (optional) → Adds interactivity and logic, if needed.
+- config.json → Specifies the module’s dimensions and positioning.
+
+To quickly generate widgets for you needs, you can visit this link to generate code: [ChatGPT Widget Creator](https://chatgpt.com/g/g-67db442681d481918f64fbf0c01ae62b-statswatch-module-creator)
 
 ## TO-DO
 
