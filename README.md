@@ -43,10 +43,6 @@ python --version
 4. **Visit the Application in a Browser**
    ```bash
    localhost:5000/
-
-5. **Customize for Your Needs**
-
-   Visit https://github.com/krpouncy/OWTracker for an example program that tracks OW games.
    
 ## Things to Keep in Mind:
 - Currently, only the inputs `TAB` on PC and `Back Button` for Xbox are registered as screenshot buttons. 
