@@ -149,3 +149,55 @@ window.addEventListener('DOMContentLoaded', function () {
     fetch('/load');
     initCore();
 });
+
+// Function to update the displayed delay value
+function updateDelayValue(val) {
+    document.getElementById('capture-delay-value').innerText = val + ' seconds';
+    // Send the new value to the server
+    fetch('/set-screenshot-delay', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ screenshot_delay: val })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Screenshot delay updated:', data.screenshot_delay);
+    })
+    .catch(error => console.error('Error updating screenshot delay:', error));
+}
+
+// Add event listener to update the value when the slider is moved
+var slider = document.getElementById('capture-delay-slider');
+slider.addEventListener('input', function() {
+    updateDelayValue(this.value);
+});
+
+// Toggle the display of the capture delay section
+function toggleCaptureDelay() {
+    var captureDelaySection = document.getElementById("capture-delay-settings");
+    var arrow = document.getElementById("toggle-capture-delay");
+    if (captureDelaySection.style.display === "none") {
+        captureDelaySection.style.display = "block";
+        arrow.innerHTML = "&#x25BC;"; // downward arrow
+    } else {
+        captureDelaySection.style.display = "none";
+        arrow.innerHTML = "&#x25B2;"; // upward arrow
+    }
+}
+
+// Set the initial value when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch the current screenshot delay from the server and update the slider
+    fetch('/get-screenshot-delay')
+        .then(response => response.json())
+        .then(data => {
+            const slider = document.getElementById('capture-delay-slider');
+            if (slider) {
+                // Assuming the delay is in milliseconds, you might want to
+                // convert it if your slider is in seconds. Here, we assume they match.
+                slider.value = data.screenshot_delay;
+                updateDelayValue(slider.value);
+            }
+        })
+        .catch(error => console.error('Error fetching screenshot delay:', error));
+});

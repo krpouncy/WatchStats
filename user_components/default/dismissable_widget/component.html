@@ -1,4 +1,4 @@
-<div style="
+<div id="dismissible-module" class="grid-stack-item-content" style="
     background: rgba(128, 128, 128, 0.3);
     backdrop-filter: blur(10px);
     padding: 20px;
@@ -17,6 +17,12 @@
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;">
-    Resize Elements with the bottom right corner
+    align-items: center;
+    position: relative;">
+
+    <span style="position: absolute; top: 8px; right: 12px; cursor: pointer; color: white; font-size: 20px;" onclick="removeModule(this)">
+        X
+    </span>
+
+    <p>Resize Elements with the bottom right corner</p>
 </div>

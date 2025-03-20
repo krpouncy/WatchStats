@@ -1,0 +1,35 @@
+<div id="latest-screenshot-module" style="
+    background: rgba(128, 128, 128, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 0;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 2px rgba(255, 255, 255, 0.2);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+">
+    <img id="latest-screenshot" src="" alt="No Screenshot Available" style="
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        display: none;
+    ">
+
+    <!-- Placeholder message -->
+    <div id="no-screenshot-message" style="
+        color: rgba(255, 255, 255, 0.7);
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.2em;
+        text-align: center;
+        padding: 20px;
+        max-width: 80%;
+    ">
+        No screenshots yet. Take a screenshot to display it here.
+    </div>
+</div>

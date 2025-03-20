@@ -51,7 +51,6 @@ def dashboard():
 def about():
     return render_template('about.html')
 
-
 # Routes for programmable events
 @core_bp.route('/load')
 def load_route():
@@ -145,15 +144,18 @@ def save_layout():
 
     return jsonify({'status': 'success'})
 
-# TODO GET THIS WORKING AND DETERMINE IF SECURITY IS NECESSARY
-# @core_bp.after_request
-# def apply_csp(response):
-#     # response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self';"
-#     # update to Content-Security-Policy: default-src 'self'; style-src 'self' https://cdnjs.cloudflare.com
-#     # TODO remove unsafe-inline and add nonce for inline scripts
-#     response.headers['Content-Security-Policy'] = (
-#         "default-src 'self'; "
-#         "script-src 'self' https://cdn.jsdelivr.net https://cdn.socket.io; "
-#         "style-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'unsafe-inline'; "
-#     )
-#     return response
+
+@core_bp.route('/get-screenshot-delay', methods=['GET'])
+def get_screenshot_delay():
+    # Return the current screenshot delay (assumed to be in milliseconds)
+    return jsonify({'screenshot_delay': app_state.screenshot_delay})
+
+@core_bp.route('/set-screenshot-delay', methods=['POST'])
+def set_screenshot_delay():
+    try:
+        data = request.get_json()
+        new_delay = float(data.get('screenshot_delay', 5))
+        app_state.screenshot_delay = new_delay
+        return jsonify({'status': 'success', 'screenshot_delay': new_delay})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 400

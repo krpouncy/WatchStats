@@ -1,4 +1,5 @@
 import ctypes  # TODO consider using another library like (inputs or pynput) instead of 'keyboard' (DOESN"T WORK)
+import time
 import traceback
 
 import eventlet
@@ -53,25 +54,37 @@ def input_listener():
     """Listen for input events."""
     print("Input listener started")
 
+    # Initialize the next available screenshot time to 0
+    app_state.next_screenshot_time = 0
     holding_back = False
 
     while True:
         try:
+            current_time = time.time()
+            # For PC input
             if app_state.input_type == "PC":
                 if is_key_pressed(VK_TAB):
-                    print("Taking screenshot...")
-                    game_manager.process_screenshot()
-                    eventlet.sleep(0.5)  # Prevent spamming
+                    # Check if screenshot delay has passed
+                    if current_time >= app_state.next_screenshot_time:
+                        print("Taking screenshot...")
+                        game_manager.process_screenshot()
+                        # Update next available time based on the delay (convert ms to seconds)
+                        app_state.next_screenshot_time = current_time + app_state.screenshot_delay
+                    else:
+                        # Optionally, you can log that screenshot is not available yet
+                        pass
 
+            # For Controller input
             if app_state.input_type == "Controller":
                 state = get_controller_state(0)  # Replace with your controller state check
                 if state:
                     buttons = state.Gamepad.wButtons
                     if buttons & XINPUT_GAMEPAD_BACK:  # Adjust for specific controller buttons
-                        if not holding_back:
+                        if not holding_back and current_time >= app_state.next_screenshot_time:
                             holding_back = True
                             print("Taking screenshot...")
                             game_manager.process_screenshot()
+                            app_state.next_screenshot_time = current_time + app_state.screenshot_delay
                     else:
                         holding_back = False
 
